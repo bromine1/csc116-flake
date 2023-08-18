@@ -16,6 +16,23 @@
         config.allowUnfree = true;
       };
       extensions = vscodeExtensions.extensions.${system};
+
+      # Package
+      name = "java";
+      version = "";
+      src = ./.;
+      pname = name;
+
+      propagatedBuildInputs = with pkgs; [
+        jdk17
+      ];
+      buildPhase = "
+          javac ${name}.java
+          ";
+      installPhase = ''
+        mkdir -p $out/bin/class
+        mv *.class $out/bin/class
+      '';
     in {
       devShells.default = pkgs.mkShell {
         packages = with pkgs; [
@@ -40,6 +57,15 @@
               ];
           })
         ];
+        inherit propagatedBuildInputs buildPhase installPhase;
       };
+
+      # Package
+      packages.default = with pkgs;
+        stdenv.mkDerivation {
+          inherit name version src pname propagatedBuildInputs buildPhase installPhase;
+        };
+
+      # App to run package
     });
 }
