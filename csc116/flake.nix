@@ -37,6 +37,8 @@
       devShells.default = pkgs.mkShell {
         packages = with pkgs; [
           jdk17
+          checkstyle
+          firefox
           (vscode-with-extensions.override {
             vscodeExtensions = with vscode-extensions;
             # CSC116 Extenstions
@@ -50,10 +52,11 @@
               ++
               # Personal extensions
               [
-                vscode-extensions.vscodevim.vim
+                #vscode-extensions.vscodevim.vim
                 vscode-extensions.oderwat.indent-rainbow
                 extensions.vscode-marketplace.shengchen.vscode-checkstyle
                 extensions.vscode-marketplace.thang-nm.catppuccin-perfect-icons
+                extensions.vscode-marketplace.asvetliakov.vscode-neovim
               ];
           })
         ];
