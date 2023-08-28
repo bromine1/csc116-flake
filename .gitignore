@@ -1,4 +1,7 @@
 .direnv
+**.direnv
+
+**flake.lock
 
 # Compiled class file
 *.class
