@@ -23,15 +23,17 @@
       src = ./.;
       pname = name;
 
-      propagatedBuildInputs = with pkgs; [
+      nativeBuildInputs = with pkgs; [
         jdk17
       ];
       buildPhase = "
           javac ${name}.java
           ";
       installPhase = ''
-        mkdir -p $out/bin/class
-        mv *.class $out/bin/class
+        mkdir -p $out/bin $out/share/java
+        mv project1/bin/${name}.class $out/share/java
+        makeWrapper ${pkgs.temurin-jre-bin-17}/bin/java $out/bin/${name} \
+        --add-flags "-cp $out/share/java/ ${name}"
       '';
     in {
       devShells.default = pkgs.mkShell {
@@ -60,13 +62,13 @@
               ];
           })
         ];
-        inherit propagatedBuildInputs buildPhase installPhase;
+        inherit nativeBuildInputs buildPhase installPhase;
       };
 
       # Package
       packages.default = with pkgs;
         stdenv.mkDerivation {
-          inherit name version src pname propagatedBuildInputs buildPhase installPhase;
+          inherit name version src pname nativeBuildInputs buildPhase installPhase;
         };
 
       # App to run package
